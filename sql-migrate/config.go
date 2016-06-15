@@ -2,12 +2,12 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"os"
 
-	"github.com/rubenv/sql-migrate"
+	"github.com/honest/sql-migrate"
 	"gopkg.in/gorp.v1"
 	"gopkg.in/yaml.v1"
 
@@ -54,22 +54,20 @@ func ReadConfig() (map[string]*Environment, error) {
 }
 
 func GetEnvironment() (*Environment, error) {
-	config, err := ReadConfig()
-	if err != nil {
-		return nil, err
-	}
+	config, _ := ReadConfig()
 
-	env := config[ConfigEnvironment]
+	var env *Environment
+	if config != nil {
+		env = config[ConfigEnvironment]
+	}
 	if env == nil {
-		return nil, errors.New("No environment: " + ConfigEnvironment)
-	}
-
-	if env.Dialect == "" {
-		return nil, errors.New("No dialect specified")
+		// default to mysql dialect
+		env = &Environment{Dialect: "mysql", DataSource: os.Getenv("API_DB_DSN"), Dir: "go-framework/framework/sql/migrations"}
 	}
 
 	if env.DataSource == "" {
-		return nil, errors.New("No data source specified")
+		// default to development.
+		env.DataSource = "root@tcp(www.honest.dev:3306)/honest_www_dev?parseTime=true"
 	}
 
 	if env.Dir == "" {
