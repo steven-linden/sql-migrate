@@ -13,11 +13,11 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 var dialects = map[string]gorp.Dialect{
-	"sqlite3":  gorp.SqliteDialect{},
+	// "sqlite3":  gorp.SqliteDialect{},
 	"postgres": gorp.PostgresDialect{},
 	"mysql":    gorp.MySQLDialect{Engine: "InnoDB", Encoding: "UTF8"},
 }
@@ -62,7 +62,11 @@ func GetEnvironment() (*Environment, error) {
 	}
 	if env == nil {
 		// default to mysql dialect
-		env = &Environment{Dialect: "mysql", DataSource: os.Getenv("API_DB_DSN"), Dir: "go-framework/framework/sql/migrations"}
+		migrationsDir := "go-framework/framework/sql/migrations"
+		if md := os.Getenv("DB_MIGRATIONS_PATH"); md != "" {
+			migrationsDir = md
+		}
+		env = &Environment{Dialect: "mysql", DataSource: os.Getenv("API_DB_DSN"), Dir: migrationsDir}
 	}
 
 	if env.DataSource == "" {
