@@ -2,23 +2,22 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 
-	"github.com/rubenv/sql-migrate"
+	"github.com/honest/sql-migrate"
 	"gopkg.in/gorp.v1"
 	"gopkg.in/yaml.v1"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 var dialects = map[string]gorp.Dialect{
-	"sqlite3":  gorp.SqliteDialect{},
+	// "sqlite3":  gorp.SqliteDialect{},
 	"postgres": gorp.PostgresDialect{},
 	"mysql":    gorp.MySQLDialect{Engine: "InnoDB", Encoding: "UTF8"},
 }
@@ -55,22 +54,24 @@ func ReadConfig() (map[string]*Environment, error) {
 }
 
 func GetEnvironment() (*Environment, error) {
-	config, err := ReadConfig()
-	if err != nil {
-		return nil, err
-	}
+	config, _ := ReadConfig()
 
-	env := config[ConfigEnvironment]
+	var env *Environment
+	if config != nil {
+		env = config[ConfigEnvironment]
+	}
 	if env == nil {
-		return nil, errors.New("No environment: " + ConfigEnvironment)
-	}
-
-	if env.Dialect == "" {
-		return nil, errors.New("No dialect specified")
+		// default to mysql dialect
+		migrationsDir := "go-framework/framework/sql/migrations"
+		if md := os.Getenv("DB_MIGRATIONS_PATH"); md != "" {
+			migrationsDir = md
+		}
+		env = &Environment{Dialect: "mysql", DataSource: os.Getenv("API_DB_DSN"), Dir: migrationsDir}
 	}
 
 	if env.DataSource == "" {
-		return nil, errors.New("No data source specified")
+		// default to development.
+		env.DataSource = "root@tcp(www.honest.dev:3306)/honest_www_dev?parseTime=true"
 	}
 	env.DataSource = os.ExpandEnv(env.DataSource)
 

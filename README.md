@@ -1,3 +1,11 @@
+# Honest Update
+
+* Config database through OS environments.
+* Set default migrations dir to
+`go-framework/framework/sql/migrations`
+* Set default datasource to
+`root@tcp(www.honest.dev:3306)/honest_www_dev?parseTime=true`
+
 # sql-migrate
 
 > SQL Schema migration tool for [Go](http://golang.org/). Based on [gorp](https://github.com/go-gorp/gorp) and [goose](https://bitbucket.org/liamstask/goose).
