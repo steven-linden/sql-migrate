@@ -21,7 +21,7 @@ Using [modl](https://github.com/jmoiron/modl)? Check out [modl-migrate](https://
 To install the library and command line program, use the following:
 
 ```bash
-go get github.com/rubenv/sql-migrate/...
+go get github.com/steven-linden/sql-migrate/...
 ```
 
 ## Usage
@@ -92,7 +92,7 @@ $ sql-migrate status
 Import sql-migrate into your application:
 
 ```go
-import "github.com/rubenv/sql-migrate"
+import "github.com/steven-linden/sql-migrate"
 ```
 
 Set up a source of migrations, this can be from memory, from a set of files or from bindata (more on that later):
