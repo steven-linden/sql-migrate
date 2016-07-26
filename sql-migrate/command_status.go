@@ -82,6 +82,7 @@ func (c *StatusCommand) Run(args []string) int {
 		}
 	}
 
+    fmt.Printf("Migrations is %+v and is %v in size\n", migrations, len(migrations))
     fmt.Printf("Rows are: %+v and is %v in size\n" , rows, len(rows))
 
 	for _, r := range records {
