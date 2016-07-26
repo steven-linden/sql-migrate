@@ -56,6 +56,9 @@ func (c *StatusCommand) Run(args []string) int {
 		return 1
 	}
 
+    fmt.Printf("db is %+v", db)
+    fmt.Printf("dialect is %+v", dialect)
+
 	source := migrate.FileMigrationSource{
 		Dir: env.Dir,
 	}
