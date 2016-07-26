@@ -48,7 +48,7 @@ func (c *StatusCommand) Run(args []string) int {
 		return 1
 	}
 
-    fmt.Printf("Environment is %+v", environment)
+    fmt.Printf("Env is %+v", env)
 
 	db, dialect, err := GetConnection(env)
 	if err != nil {
