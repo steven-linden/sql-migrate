@@ -82,6 +82,8 @@ func (c *StatusCommand) Run(args []string) int {
 		}
 	}
 
+    fmt.Printf("Rows are: %v \n" , rows)
+
 	for _, r := range records {
 		rows[r.Id].Migrated = true
 		rows[r.Id].AppliedAt = r.AppliedAt
