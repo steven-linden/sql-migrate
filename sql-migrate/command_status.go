@@ -48,20 +48,16 @@ func (c *StatusCommand) Run(args []string) int {
 		return 1
 	}
 
-    fmt.Printf("Env is %+v", env)
-
 	db, dialect, err := GetConnection(env)
 	if err != nil {
 		ui.Error(err.Error())
 		return 1
 	}
 
-    fmt.Printf("db is %+v", db)
-    fmt.Printf("dialect is %+v", dialect)
-
 	source := migrate.FileMigrationSource{
 		Dir: env.Dir,
 	}
+
 	migrations, err := source.FindMigrations()
 	if err != nil {
 		ui.Error(err.Error())
@@ -86,9 +82,6 @@ func (c *StatusCommand) Run(args []string) int {
 			Migrated: false,
 		}
 	}
-
-    fmt.Printf("Migrations is %+v and is %v in size\n", migrations, len(migrations))
-    fmt.Printf("Rows are: %+v and is %v in size\n" , rows, len(rows))
 
 	for _, r := range records {
 		rows[r.Id].Migrated = true
