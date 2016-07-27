@@ -107,7 +107,7 @@ func (c *StatusCommand) Run(args []string) int {
 
 		table.Render()
 	} else {
-		ui.Output(fmt.Sprintf("%d migrations seen, not checking", len(migrations)
+		ui.Output(fmt.Sprintf("%d migrations seen, not checking", len(migrations)))
 	}
 
 	return 0
