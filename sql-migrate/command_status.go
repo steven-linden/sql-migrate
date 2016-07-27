@@ -64,45 +64,51 @@ func (c *StatusCommand) Run(args []string) int {
 		return 1
 	}
 
-	records, err := migrate.GetMigrationRecords(db, dialect)
-	if err != nil {
-		ui.Error(err.Error())
-		return 1
-	}
+	// only check migrations that we've discovered
+	if len(migrations) > 0 {
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Migration", "Applied"})
-	table.SetColWidth(60)
-
-	rows := make(map[string]*statusRow)
-
-	for _, m := range migrations {
-		rows[m.Id] = &statusRow{
-			Id:       m.Id,
-			Migrated: false,
+		records, err := migrate.GetMigrationRecords(db, dialect)
+		if err != nil {
+			ui.Error(err.Error())
+			return 1
 		}
-	}
 
-	for _, r := range records {
-		rows[r.Id].Migrated = true
-		rows[r.Id].AppliedAt = r.AppliedAt
-	}
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetHeader([]string{"Migration", "Applied"})
+		table.SetColWidth(60)
 
-	for _, m := range migrations {
-		if rows[m.Id].Migrated {
-			table.Append([]string{
-				m.Id,
-				rows[m.Id].AppliedAt.String(),
-			})
-		} else {
-			table.Append([]string{
-				m.Id,
-				"no",
-			})
+		rows := make(map[string]*statusRow)
+
+		for _, m := range migrations {
+			rows[m.Id] = &statusRow{
+				Id:       m.Id,
+				Migrated: false,
+			}
 		}
-	}
 
-	table.Render()
+		for _, r := range records {
+			rows[r.Id].Migrated = true
+			rows[r.Id].AppliedAt = r.AppliedAt
+		}
+
+		for _, m := range migrations {
+			if rows[m.Id].Migrated {
+				table.Append([]string{
+					m.Id,
+					rows[m.Id].AppliedAt.String(),
+				})
+			} else {
+				table.Append([]string{
+					m.Id,
+					"no",
+				})
+			}
+		}
+
+		table.Render()
+	} else {
+		ui.Output(fmt.Sprintf("%d migrations seen, not checking", len(migrations)
+	}
 
 	return 0
 }
