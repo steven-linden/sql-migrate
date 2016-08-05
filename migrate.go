@@ -202,7 +202,6 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 			migrations = append(migrations, migration)
 		}
 	}
-    }
 
 	// Make sure migrations are sorted
 	sort.Sort(byId(migrations))
