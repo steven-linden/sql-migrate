@@ -174,7 +174,7 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
         return nil, err
     }
 
-    for _, directory := range directories {
+    for directory, _ := range directories {
 
 	files, err := directory.Readdir(0)
 	if err != nil {
