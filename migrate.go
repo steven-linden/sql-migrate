@@ -194,7 +194,7 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 
 	for _, info := range files {
 		if strings.HasSuffix(info, ".sql") {
-            fmt.Printf("%v may be a migration", info)
+            fmt.Printf("%v may be a migration\n", info)
 			file, err := os.Open(path.Join(f.Dir, info))
 			if err != nil {
 				return nil, err
