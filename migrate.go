@@ -170,31 +170,25 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 		return nil, err
 	}
 
-	//files, err := directory.Readdir(0)
-	//if err != nil {
-	//	return nil, err
-	//}
+	// For us, our schemas are contained within subdirectories that should be applied in a specific order
+	// Recourse through our directories, and get all the possible candidates for migration
+	files := []string{}
 
-    files := []string{}
+	err = filepath.Walk(f.Dir, func(path string, f os.FileInfo, err error) error {
+		// We only want files, not directories
+		fi, err := os.Stat(path)
+		if !fi.IsDir() {
+			files = append(files, path)
+		}
+		return nil
+	})
 
-    err = filepath.Walk(f.Dir, func(path string, f os.FileInfo, err error) error {
-        // We only want files, not directories
-        fi, err := os.Stat(path)
-        if !fi.IsDir() {
-            files = append(files, path)
-        }
-        return nil
-    })
-
-    if err != nil {
-        return nil, err
-    }
-
-    fmt.Printf("files: %s\n", files)
+	if err != nil {
+		return nil, err
+	}
 
 	for _, info := range files {
 		if strings.HasSuffix(info, ".sql") {
-            fmt.Printf("%v may be a migration\n", info)
 			file, err := os.Open(path.Join(f.Dir, info))
 			if err != nil {
 				return nil, err
