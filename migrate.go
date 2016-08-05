@@ -169,7 +169,14 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 		return nil, err
 	}
 
-	files, err := file.Readdir(0)
+    directories, err = file.Readdirnames(-1)
+    if err != nill {
+        return nill, err
+    }
+
+    for _, directory := range directories {
+
+	files, err := directory.Readdir(0)
 	if err != nil {
 		return nil, err
 	}
@@ -191,6 +198,7 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 			migrations = append(migrations, migration)
 		}
 	}
+    }
 
 	// Make sure migrations are sorted
 	sort.Sort(byId(migrations))
