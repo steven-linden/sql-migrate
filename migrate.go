@@ -177,7 +177,7 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 
     files := []string{}
 
-    err := filepath.Walk(f.Dir, func(path string, f os.FileInfo, err error) error {
+    err = filepath.Walk(f.Dir, func(path string, f os.FileInfo, err error) error {
         files = append(files, path)
         return nil
     })
@@ -189,13 +189,13 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
     fmt.Printf("files: %s", files)
 
 	for _, info := range files {
-		if strings.HasSuffix(info.Name(), ".sql") {
-			file, err := os.Open(path.Join(f.Dir, info.Name()))
+		if strings.HasSuffix(info, ".sql") {
+			file, err := os.Open(path.Join(f.Dir, info))
 			if err != nil {
 				return nil, err
 			}
 
-			migration, err := ParseMigration(info.Name(), file)
+			migration, err := ParseMigration(info, file)
 			if err != nil {
 				return nil, err
 			}
