@@ -178,7 +178,7 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
     files := []string{}
 
     err := filepath.Walk(f.Dir, func(path string, f os.FileInfo, err error) error {
-        fileList = append(fileList, path)
+        files = append(files, path)
         return nil
     })
 
