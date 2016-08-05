@@ -169,17 +169,21 @@ func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 		return nil, err
 	}
 
-    directories, err := file.Readdirnames(-1)
+	//files, err := directory.Readdir(0)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+    files := []string{}
+
+    err := filepath.Walk(f.Dir, func(path string, f os.FileInfo, err error) error {
+        fileList = append(fileList, path)
+        return nil
+    })
+
     if err != nil {
         return nil, err
     }
-
-    for directory, _ := range directories {
-
-	files, err := directory.Readdir(0)
-	if err != nil {
-		return nil, err
-	}
 
     fmt.Printf("files: %s", files)
 
