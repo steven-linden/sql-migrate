@@ -165,7 +165,7 @@ var _ MigrationSource = (*FileMigrationSource)(nil)
 func (f FileMigrationSource) FindMigrations() ([]*Migration, error) {
 	migrations := make([]*Migration, 0)
 
-	file, err := os.Open(f.Dir)
+	_, err := os.Open(f.Dir)
 	if err != nil {
 		return nil, err
 	}
